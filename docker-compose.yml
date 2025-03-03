@@ -1,0 +1,50 @@
+services:
+  postgres15:
+    container_name: postgres15
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+    volumes:
+      - postgres15_data:/var/lib/postgresql/data
+    ports: &ports
+      - "5432:5432"
+    networks: &networks
+      - postgres_network
+    healthcheck: &healthcheck
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres14:
+    container_name: postgres14
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+    volumes:
+      - postgres14_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks: *networks
+    healthcheck: *healthcheck
+
+  postgres13:
+    container_name: postgres13
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+    volumes:
+      - postgres13_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks: *networks
+    healthcheck: *healthcheck
+
+networks:
+  postgres_network:
+    external: true
+
+volumes:
+  postgres15_data:
+  postgres14_data:
+  postgres13_data:
